@@ -10,13 +10,17 @@ Rect::Rect(float in_left, float in_right, float in_top, float in_bottom)
 }
 
 Rect::Rect(const Vec2& topLeft, const Vec2& bottomRight)
+	:
+	Rect(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y) //Special use of intialize list calling its own constructor to intialize itself
 {
-	Rect(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y);
+	//Rect(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y); //Initial the newly create object, make no change to itself
 }
 
-Rect::Rect(const Vec2& topLeft, float width, float height)
+Rect::Rect(const Vec2& topLeft, float width, float height) //Special use of intialize list calling its own constructor to intialize itself
+	:
+	Rect(topLeft, topLeft + Vec2(width, height))
 {
-	Rect(topLeft, topLeft + Vec2(width, height));
+	//Rect(topLeft, topLeft + Vec2(width, height)); //Initial the newly create object, make no change to itself
 }
 
 bool Rect::IsOverlapWith(const Rect& other) const
@@ -26,5 +30,5 @@ bool Rect::IsOverlapWith(const Rect& other) const
 
 void Rect::DrawRect(Graphics& gfx,const Color& color)
 {
-	gfx.DrawRect(left,top,right,bottom,color);
+	gfx.DrawRect(int(left),int(top),int(right),int(bottom),color);
 }

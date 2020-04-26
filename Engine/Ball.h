@@ -6,16 +6,17 @@
 #include "SpriteCodex.h"
 #include "Graphics.h"
 #include "Rect.h"
+#include "MainWindow.h"
 
 class Ball
 {
 public:
 	Ball(Vec2& in_pos, Vec2& in_velocity);
 	void Draw(Graphics& gfx);
-	void Update();
+	void Update(MainWindow& wnd);
 	void DoWallCollision(Rect& wall);
 	void DoPaddleCollision(Paddle& paddle);
-	void DoBrickCollision(Brick& brick);
+	bool DoBrickCollision(Brick& brick);
 	void ReboundX();
 	void ReboundY();
 	Rect GetRectToCompare();

@@ -9,15 +9,16 @@ Paddle::Paddle(Vec2 in_pos)
 Rect Paddle::GetRectToCompare()
 {
 	Vec2 half = Vec2(width / 2.0f, height / 2.0f);
-	return Rect(pos - half, pos + half);
+	Vec2 center = pos;
+	return Rect(center - half, center + half);
 }
 
-void Paddle::Draw(Graphics gfx)
+void Paddle::Draw(Graphics& gfx)
 {
 	Rect rect = GetRectToCompare();
 	rect.DrawRect(gfx, wingColor);
-	rect.left += width / 2.0f;
-	rect.right -= width / 2.0f;
+	rect.left += wingWidth / 2.0f;
+	rect.right -= wingWidth / 2.0f;
 	rect.DrawRect(gfx, color);
 }
 
@@ -29,4 +30,24 @@ float Paddle::Width()
 float Paddle::WingWidth()
 {
 	return wingWidth;
+}
+
+void Paddle::Update(Graphics& gfx, MainWindow& wnd, float delta_time)
+{
+	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	{
+		pos.x -= speed * delta_time * 60;
+	}
+	if (pos.x < 0.0f + width/2.0f + 1.0f)
+	{
+		pos.x = 0.0f + width / 2.0f;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	{
+		pos.x += speed * delta_time * 60;
+	}
+	if (pos.x > gfx.ScreenWidth - 1.0f - width/2.0f - 1.0f)
+	{
+		pos.x = gfx.ScreenWidth - 1.0f - width / 2.0f;
+	}
 }
