@@ -27,7 +27,7 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	wall(0.0f,gfx.ScreenWidth - 1.0f,0.0f, gfx.ScreenHeight - 1.0f),
 	paddle(Vec2(360.0f,550.0f)),
-	ball(Vec2(400.0f,200.0f), Vec2(2.5f,2.5f))
+	ball(Vec2(400.0f,200.0f), Vec2(4.0f,4.0f))
 {
 	Vec2 Vector(40.0f, 40.0f);
 	Rect rect;
@@ -69,10 +69,39 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	float pivot;
+	int index;
+	bool IsCollisionHappened = false;
+	pivot = 10000000.0f;
+	index = -1;
 	paddle.Update(gfx, wnd, 1.0f/60.0f);
 	ball.Update(wnd);
 	ball.DoWallCollision(wall);
 	ball.DoPaddleCollision(paddle);
+	
+	//Unnknown Error: Still only cause ReboundX() not ReboundY() ???
+	/*for (int i = 0; i <= 47; i++)
+	{
+		if (ball.CheckBrickCollision(brick[i]) < pivot)
+		{
+			if (IsCollisionHappened)
+			{
+				pivot = ball.CheckBrickCollision(brick[i]);
+				index = i;
+			}
+			else
+			{
+				pivot = ball.CheckBrickCollision(brick[i]);
+				index = i;
+				IsCollisionHappened = true;
+			}
+		}
+	}
+	if (IsCollisionHappened)
+	{
+		ball.DoBrickCollision(brick[index]);
+	}*/
+	
 	for (int i = 0; i <= 47; i++)
 	{
 		if (ball.DoBrickCollision(brick[i]))

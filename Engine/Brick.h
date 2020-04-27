@@ -19,5 +19,5 @@ public:
 private:
 	Rect rect;
 	Color color;
-	bool destroyed = false;
+	bool destroyed = true;
 };

@@ -3,7 +3,8 @@
 Brick::Brick(Rect in_rect, Color in_color)
 	:
 	rect(in_rect),
-	color(in_color)
+	color(in_color),
+	destroyed(false)
 {
 }
 

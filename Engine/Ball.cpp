@@ -61,9 +61,13 @@ void Ball::DoPaddleCollision(Paddle& paddle)
 		{
 			ReboundY();
 		}
+		else if (((velocity.x > 0) && (pos.x < paddleRect.left)) || ((velocity.x < 0) && (pos.x > paddleRect.right)))
+		{
+			ReboundY();
+			ReboundX();
+		}
 		else
 		{
-			ReboundX();
 			ReboundY();
 		}
 	}
@@ -78,8 +82,7 @@ bool Ball::DoBrickCollision(Brick& brick)
 	{
 		IsTouch = true;
 		brick.Destroyed();
-		Vec2 aim = this->pos;
-		if (this->pos.x >= brickRect.left && this->pos.x <= brickRect.right)
+		if (pos.x >= brickRect.left && pos.x <= brickRect.right)
 		{
 			ReboundY();
 		}
@@ -88,7 +91,7 @@ bool Ball::DoBrickCollision(Brick& brick)
 			ReboundX();
 		}
 
-		/*  Old Ball bounce implementation, hard to conceptualize
+		/*  Old Ball bounce implementation, wrong and hard to conceptualize
 		if (!((rect.left >= brickRect.left) && (rect.right <= brickRect.right)))
 		{
 			ReboundX();
@@ -107,6 +110,13 @@ bool Ball::DoBrickCollision(Brick& brick)
 		*/
 	}
 	return IsTouch;
+}
+
+float Ball::CheckBrickCollision(Brick& brick)
+{
+	Rect brickRect = brick.GetRectToCompare();
+	Vec2 distance = Vec2((brickRect.left + brickRect.right) / 2 - pos.x, (brickRect.top + brickRect.bottom) / 2 - pos.y);
+	return distance.GetLength();
 }
 
 void Ball::ReboundX()
