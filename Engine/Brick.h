@@ -12,10 +12,11 @@ public:
 	Rect GetRectToCompare();
 	void Destroyed();
 	bool IsDestroyed();
+	Vec2 GetCenter();
 
 public:
-	static constexpr float width = 60.0f;
-	static constexpr float height = 30.0f;
+	static constexpr float width = 42.0f;
+	static constexpr float height = 20.0f;
 private:
 	Rect rect;
 	Color color;

@@ -48,7 +48,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Paddle paddle;
-	Brick brick[48];
+	Brick brick[72];
 	Ball ball;
 	Rect wall;
 	/********************************/

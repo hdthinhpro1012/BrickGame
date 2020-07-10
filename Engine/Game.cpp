@@ -27,12 +27,12 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	wall(0.0f,gfx.ScreenWidth - 1.0f,0.0f, gfx.ScreenHeight - 1.0f),
 	paddle(Vec2(360.0f,550.0f)),
-	ball(Vec2(400.0f,200.0f), Vec2(4.0f,4.0f))
+	ball(Vec2(400.0f,200.0f), Vec2(5.0f,5.0f))
 {
-	Vec2 Vector(40.0f, 40.0f);
+	Vec2 Vector(20.0f, 20.0f);
 	Rect rect;
 	Color color;
-	for (int x = 0; x <= 3; x++)
+	for (int x = 0; x <= 3; x = x + 1)
 	{
 		switch (x)
 		{
@@ -51,10 +51,10 @@ Game::Game( MainWindow& wnd )
 		default:
 			break;
 		}
-		for (int y = 0; y <= 11; y++)
+		for (int y = 0; y <= 17; y = y + 1)
 		{
 			rect = Rect(Vector + Vec2(y * Brick::width,x * Brick::height),Brick::width,Brick::height);
-			brick[x * 12 + y] = Brick(rect,color);
+			brick[x * 18 + y] = Brick(rect,color);
 		}
 	}
 }
@@ -69,11 +69,9 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	float pivot;
-	int index;
-	bool IsCollisionHappened = false;
-	pivot = 10000000.0f;
-	index = -1;
+	static float pivot;
+	static int index;
+	static bool IsCollisionHappened;
 	paddle.Update(gfx, wnd, 1.0f/60.0f);
 	ball.Update(wnd);
 	ball.DoWallCollision(wall);
@@ -82,16 +80,16 @@ void Game::UpdateModel()
 	//Unnknown Error: Still only cause ReboundX() not ReboundY() ???
 	/*for (int i = 0; i <= 47; i++)
 	{
-		if (ball.CheckBrickCollision(brick[i]) < pivot)
+		if (ball.DistanceToBrick(brick[i]) < pivot)
 		{
 			if (IsCollisionHappened)
 			{
-				pivot = ball.CheckBrickCollision(brick[i]);
+				pivot = ball.DistanceToBrick(brick[i]);
 				index = i;
 			}
 			else
 			{
-				pivot = ball.CheckBrickCollision(brick[i]);
+				pivot = ball.DistanceToBrick(brick[i]);
 				index = i;
 				IsCollisionHappened = true;
 			}
@@ -101,13 +99,28 @@ void Game::UpdateModel()
 	{
 		ball.DoBrickCollision(brick[index]);
 	}*/
-	
-	for (int i = 0; i <= 47; i++)
+
+	IsCollisionHappened = false;
+	pivot = 10000000.0f;
+	index = -1;
+	for (int i = 0; i <= 71; i++)
 	{
-		if (ball.DoBrickCollision(brick[i]))
+		/*if (ball.DoBrickCollision(brick[i]))
 		{
 			break;
-		}
+		}*/
+		if (!brick[i].IsDestroyed())
+		{
+			if (ball.DistanceToBrick(brick[i]) < pivot)
+			{
+				pivot = ball.DistanceToBrick(brick[i]);
+				index = i;
+			}
+		}		
+	}
+	if (index != -1)
+	{
+		ball.DoBrickCollision(brick[index]);
 	}
 }
 
@@ -115,7 +128,7 @@ void Game::ComposeFrame()
 {
 	paddle.Draw(gfx);
 	ball.Draw(gfx);
-	for (int i = 0; i <= 47; i++)
+	for (int i = 0; i <= 71; i++)
 	{
 		if (!brick[i].IsDestroyed())
 		{

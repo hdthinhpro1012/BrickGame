@@ -17,7 +17,7 @@ public:
 	void DoWallCollision(Rect& wall);
 	void DoPaddleCollision(Paddle& paddle);
 	bool DoBrickCollision(Brick& brick);
-	float CheckBrickCollision(Brick& brick);
+	float DistanceToBrick(Brick& brick);
 	void ReboundX();
 	void ReboundY();
 	Rect GetRectToCompare();

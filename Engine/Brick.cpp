@@ -14,6 +14,11 @@ void Brick::Draw(Graphics& gfx)
 	NewRect.DrawRect(gfx, color);
 }
 
+Vec2 Brick::GetCenter()
+{
+	return Vec2((rect.left + rect.right)/2, (rect.top + rect.bottom)/2);
+}
+
 Rect Brick::GetRectToCompare()
 {
 	return rect;
