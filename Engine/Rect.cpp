@@ -32,3 +32,11 @@ void Rect::DrawRect(Graphics& gfx,const Color& color)
 {
 	gfx.DrawRect(int(left),int(top),int(right),int(bottom),color);
 }
+
+void Rect::DrawBorderOutside(Graphics& gfx, const Color& color)
+{
+	gfx.DrawRect(int(left), int(top - 5.0f), int(right), int(top), color);
+	gfx.DrawRect(int(left), int(bottom), int(right), int(bottom + 5.0f), color);
+	gfx.DrawRect(int(left - 5.0f), int(top - 5.0f), int(left), int(bottom + 5.0f), color);
+	gfx.DrawRect(int(right), int(top - 5.0f), int(right + 5.0f), int(bottom + 5.0f), color);
+}

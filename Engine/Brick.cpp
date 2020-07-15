@@ -10,7 +10,7 @@ Brick::Brick(Rect in_rect, Color in_color)
 
 void Brick::Draw(Graphics& gfx)
 {
-	Rect NewRect = Rect(rect.left + 1.0f,rect.right - 1.0f,rect.top + 1.0f,rect.bottom - 1.0f);
+	Rect NewRect = Rect(rect.left ,rect.right ,rect.top ,rect.bottom);
 	NewRect.DrawRect(gfx, color);
 }
 

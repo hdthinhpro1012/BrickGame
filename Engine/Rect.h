@@ -13,6 +13,7 @@ public:
 	Rect(const Vec2& topLeft, float width, float height);
 	bool IsOverlapWith(const Rect& another) const;
 	void DrawRect(Graphics& gfx,const Color& color);
+	void DrawBorderOutside(Graphics& gfx, const Color& color);
 	
 public:
 	float left;

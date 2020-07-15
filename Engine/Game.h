@@ -28,9 +28,11 @@
 #include "Rect.h"
 #include "Brick.h"
 #include "Colors.h"
+#include "FrameTimer.h"
 
 class Game
 {
+    friend class Ball;
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
@@ -38,18 +40,22 @@ public:
 	void Go();
 private:
 	void ComposeFrame();
-	void UpdateModel();
+	void UpdateModel(const float dt);
 	/********************************/
 	/*  User Functions              */
 	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
+    FrameTimer ft;
 	/********************************/
 	/*  User Variables              */
 	Paddle paddle;
 	Brick brick[72];
 	Ball ball;
 	Rect wall;
+    bool isOver = false;
+    static constexpr int brickRow = 4;
+    static constexpr int brickCol = 16;
 	/********************************/
 };

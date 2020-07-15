@@ -15,7 +15,7 @@ public:
 	Vec2 GetCenter();
 
 public:
-	static constexpr float width = 42.0f;
+	static constexpr float width = 40.0f;
 	static constexpr float height = 20.0f;
 private:
 	Rect rect;

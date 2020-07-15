@@ -20,19 +20,20 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include <algorithm>
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	wall(0.0f,gfx.ScreenWidth - 1.0f,0.0f, gfx.ScreenHeight - 1.0f),
-	paddle(Vec2(360.0f,550.0f)),
-	ball(Vec2(400.0f,200.0f), Vec2(5.0f,5.0f))
+	wall(20.0f,gfx.ScreenWidth - 20.0f,20.0f, gfx.ScreenHeight - 20.0f),
+	paddle(Vec2(200.0f,525.0f)),
+	ball(Vec2(400.0f,200.0f), Vec2(6.0f,6.0f))
 {
-	Vec2 Vector(20.0f, 20.0f);
+	Vec2 Vector(wall.left + 40.0f, wall.top + 20.0f);
 	Rect rect;
 	Color color;
-	for (int x = 0; x <= 3; x = x + 1)
+	for (int x = 0; x <= brickRow - 1; x = x + 1)
 	{
 		switch (x)
 		{
@@ -51,64 +52,53 @@ Game::Game( MainWindow& wnd )
 		default:
 			break;
 		}
-		for (int y = 0; y <= 17; y = y + 1)
+		for (int y = 0; y <= brickCol - 1; y = y + 1)
 		{
-			rect = Rect(Vector + Vec2(y * Brick::width,x * Brick::height),Brick::width,Brick::height);
-			brick[x * 18 + y] = Brick(rect,color);
+			rect = Rect(Vector + Vec2(y * Brick::width + (y - 1) * 4.0f, x * Brick::height + (x - 1) * 4.0f),Brick::width,Brick::height);
+			brick[x * (brickCol) + y] = Brick(rect,color);
 		}
 	}
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
-	UpdateModel();
+	gfx.BeginFrame();
+	if (!isOver)
+	{
+		static double dt;
+		dt = ft.Mark();
+		//Because run 8 times for each isOver check so after reset to true isOver is 
+		//reset to false again in the next loop
+		while (dt > 0.0f)
+		{
+			if (isOver)
+			{
+				break;
+			}
+			float delta_time = std::min(0.0025, dt);
+			dt -= 0.0025;
+			UpdateModel(delta_time * 60.0f);
+		}
+	}
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel(const float dt)
 {
 	static float pivot;
 	static int index;
 	static bool IsCollisionHappened;
-	paddle.Update(gfx, wnd, 1.0f/60.0f);
-	ball.Update(wnd);
-	ball.DoWallCollision(wall);
-	ball.DoPaddleCollision(paddle);
-	
-	//Unnknown Error: Still only cause ReboundX() not ReboundY() ???
-	/*for (int i = 0; i <= 47; i++)
-	{
-		if (ball.DistanceToBrick(brick[i]) < pivot)
-		{
-			if (IsCollisionHappened)
-			{
-				pivot = ball.DistanceToBrick(brick[i]);
-				index = i;
-			}
-			else
-			{
-				pivot = ball.DistanceToBrick(brick[i]);
-				index = i;
-				IsCollisionHappened = true;
-			}
-		}
-	}
-	if (IsCollisionHappened)
-	{
-		ball.DoBrickCollision(brick[index]);
-	}*/
+	paddle.Update(gfx, wnd, dt);
+	ball.Update(wnd, dt);
+	isOver = ball.DoWallCollision(wall, paddle);
+	ball.DoPaddleCollision(paddle, 0);
 
 	IsCollisionHappened = false;
 	pivot = 10000000.0f;
 	index = -1;
 	for (int i = 0; i <= 71; i++)
 	{
-		/*if (ball.DoBrickCollision(brick[i]))
-		{
-			break;
-		}*/
 		if (!brick[i].IsDestroyed())
 		{
 			if (ball.DistanceToBrick(brick[i]) < pivot)
@@ -120,12 +110,13 @@ void Game::UpdateModel()
 	}
 	if (index != -1)
 	{
-		ball.DoBrickCollision(brick[index]);
+		ball.DoBrickCollision(brick[index], paddle);
 	}
 }
 
 void Game::ComposeFrame()
 {
+	wall.DrawBorderOutside(gfx, Colors::LightGray);
 	paddle.Draw(gfx);
 	ball.Draw(gfx);
 	for (int i = 0; i <= 71; i++)

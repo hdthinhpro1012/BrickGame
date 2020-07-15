@@ -36,18 +36,23 @@ void Paddle::Update(Graphics& gfx, MainWindow& wnd, float delta_time)
 {
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		pos.x -= speed * delta_time * 60;
+		pos.x -= speed * delta_time;
 	}
 	if (pos.x < 0.0f + width/2.0f + 1.0f)
 	{
-		pos.x = 0.0f + width / 2.0f;
+		pos.x = 1.0f + width / 2.0f;
 	}
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		pos.x += speed * delta_time * 60;
+		pos.x += speed * delta_time;
 	}
 	if (pos.x > gfx.ScreenWidth - 1.0f - width/2.0f - 1.0f)
 	{
-		pos.x = gfx.ScreenWidth - 1.0f - width / 2.0f;
+		pos.x = gfx.ScreenWidth - 2.0f - width / 2.0f;
 	}
+}
+
+Vec2 Paddle::GetCenter()
+{
+	return Vec2(pos.x, pos.y);
 }
